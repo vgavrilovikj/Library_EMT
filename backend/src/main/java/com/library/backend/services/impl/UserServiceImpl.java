@@ -4,6 +4,7 @@ import com.library.backend.models.User;
 import com.library.backend.models.dto.UserLoginDto;
 import com.library.backend.models.dto.UserRegisterDto;
 import com.library.backend.models.enumartions.Role;
+import com.library.backend.models.projections.JwtProjection;
 import com.library.backend.models.projections.UserProjection;
 import com.library.backend.repositories.UserRepository;
 import com.library.backend.services.UserService;
@@ -19,8 +20,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.util.Collections;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -38,18 +39,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDetails getUser() {
+    public Optional<UserProjection> getUser() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         if (principal instanceof UserDetails) {
-            return (UserDetails) principal;
+            UserDetails userDetails = (UserDetails) principal;
+            User user = this.findByEmail(userDetails.getUsername()).get();
+            return Optional.of(new UserProjection(user.getEmail(), user.getName(), user.getRole()));
         }
 
         return null;
     }
 
     @Override
-    public Optional<UserProjection> authenticate(UserLoginDto userLoginDto) throws Exception {
+    public Optional<JwtProjection> authenticate(UserLoginDto userLoginDto) throws Exception {
         try {
             this.authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(userLoginDto.getEmail(), userLoginDto.getPassword())
@@ -61,20 +64,13 @@ public class UserServiceImpl implements UserService {
         final UserDetails userDetails = this.loadUserByUsername(userLoginDto.getEmail());
         final String jwt = this.jwtUtil.generateToken(userDetails);
 
-        return Optional.of(new UserProjection(jwt));
+        return Optional.of(new JwtProjection(jwt));
     }
 
     @Override
     public Optional<User> findByEmail(String email) {
         return Optional.ofNullable(this.userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User with that email doesn't exist.")));
-    }
-
-    @Override
-    public Optional<User> login(String email, String password) {
-        return this.userRepository
-                .findByEmail(email)
-                .filter(user -> Objects.equals(password, user.getPassword()));
     }
 
     @Override
@@ -86,11 +82,6 @@ public class UserServiceImpl implements UserService {
 
         this.userRepository.save(user);
         return Optional.of(true);
-    }
-
-    @Override
-    public void logout(User user) {
-        //TODO: WHAT TO DO HERE???
     }
 
     @Override
