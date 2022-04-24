@@ -3,12 +3,10 @@ package com.library.backend.controllers;
 import com.library.backend.models.dto.UserRegisterDto;
 import com.library.backend.services.UserService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/register")
 public class RegisterController {
     private final UserService userService;

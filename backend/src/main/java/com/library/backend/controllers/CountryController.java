@@ -3,14 +3,12 @@ package com.library.backend.controllers;
 import com.library.backend.models.Country;
 import com.library.backend.services.CountryService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/countries")
 public class CountryController {
     private final CountryService countryService;

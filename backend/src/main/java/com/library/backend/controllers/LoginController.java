@@ -4,12 +4,10 @@ import com.library.backend.models.dto.UserLoginDto;
 import com.library.backend.models.projections.JwtProjection;
 import com.library.backend.services.UserService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/login")
 public class LoginController {
     private final UserService userService;
