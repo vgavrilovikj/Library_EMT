@@ -8,8 +8,6 @@ const BookList = () => {
     const [books, setBooks] = useState([])
     const [activePage, setActivePage] = useState(0)
     const [totalPages, setTotalPages] = useState(null)
-    const [itemsPerPage, setItemsPerPage] = useState(null)
-    const [totalItems, setTotalItems] = useState(null)
 
     useEffect(() => {
         getBooks(activePage)
@@ -20,8 +18,6 @@ const BookList = () => {
         BookService.getAllPaginate(page)
             .then(response => {
                 setTotalPages(response.data.totalPages)
-                setItemsPerPage(response.data.size)
-                setTotalItems(response.data.totalElements)
                 setBooks(response.data.content)
             })
             .catch(e => {
@@ -31,6 +27,28 @@ const BookList = () => {
 
     const handlePageChange = (event) => {
         setActivePage(event.selected)
+    }
+
+    const deleteBook = id => {
+        BookService.remove(id)
+            .then(response => {
+                console.log(response.data)
+                getBooks(activePage)
+            })
+            .catch(e => {
+                console.log(e)
+            })
+    }
+
+    const markBookAsTaken = id => {
+        BookService.lend(id)
+            .then(response => {
+                console.log(response.data)
+                getBooks(activePage)
+            })
+            .catch(e => {
+                console.log(e)
+            })
     }
 
     return (
@@ -48,15 +66,16 @@ const BookList = () => {
                 </div>
 
                 <div className="col-12">
-                    <div className={"row"}>
+                    <div className="row">
                         <div className="col-12">
-                            <table className={"table table-dark table-stripped table-hover"}>
+                            <table className="table table-dark table-striped table-hover">
                                 <thead>
                                 <tr>
-                                    <th scope={"col"}>Name</th>
-                                    <th scope={"col"}>Categories</th>
-                                    <th scope={"col"}>Author</th>
-                                    <th scope={"col"}>Available Copies</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Categories</th>
+                                    <th scope="col">Author</th>
+                                    <th scope="col">Available Copies</th>
+                                    <th scope="col">Actions</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -65,6 +84,8 @@ const BookList = () => {
                                         <Book
                                             key={i}
                                             book={book}
+                                            onDelete={deleteBook}
+                                            markAsTaken={markBookAsTaken}
                                         />
                                     )
                                 })}

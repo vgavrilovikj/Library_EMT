@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import {Link} from "react-router-dom";
 
 const Book = props => {
     return (
@@ -7,11 +7,11 @@ const Book = props => {
             <td>{props.book.category}</td>
             <td>{props.book.author.name} {props.book.author.surname}</td>
             <td>{props.book.availableCopies}</td>
-            {/*<td className={"text-right"}>*/}
-            {/*    <button title={"Delete"} className={"btn btn-danger"} onClick={() => props.onDelete(props.book.id)}>Delete</button>*/}
-            {/*    <Link title={"Edit"} className={"btn btn-info"} onClick={() => props.onEdit(props.book.id)} to={`/books/edit/${props.book.id}`}>Edit</Link>*/}
-            {/*    <button title={"Mark as Taken"} className={"btn btn-success"} onClick={() => props.onMark(props.book.id)}>Mark as Taken</button>*/}
-            {/*</td>*/}
+            <td>
+                <Link className="btn btn-secondary me-3" to={`/books/${props.book.id}`}>Edit</Link>
+                <button className="btn btn-warning me-3" onClick={() => props.markAsTaken(props.book.id)}>Mark as Taken</button>
+                <button type="button" className="btn btn-danger" onClick={() => props.onDelete(props.book.id)}>Delete</button>
+            </td>
         </tr>
     )
 }

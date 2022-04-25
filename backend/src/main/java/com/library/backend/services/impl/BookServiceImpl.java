@@ -83,6 +83,7 @@ public class BookServiceImpl implements BookService {
 
         book.setName(bookDto.getName());
         book.setAuthor(author);
+        book.setCategory(bookDto.getCategory());
         book.setAvailableCopies(bookDto.getAvailableCopies());
 
         return Optional.of(this.bookRepository.save(book));
